@@ -17,6 +17,7 @@
 #include "UnityPluginAPI/IUnityGraphicsD3D11.h"
 #include "VideoDecoder.h"
 #include "libyuv/convert_argb.h"
+#include <thread>
 
 
 // Plugin Mode
@@ -58,7 +59,6 @@ unsigned int h264DataBufLen = 0;
 unsigned int wH264Frame = textureWidth;
 unsigned int hH264Frame = textureHeight;
 byte* argbDataBuf = NULL;
-
 
 static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType eventType);
 
@@ -149,9 +149,72 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureFromUnity(v
 	g_TextureHeight = h;
 }
 
+void ProcessTestFrameDataThread()
+{
+	while (true)
+	{
+		if (!g_TextureHandle)
+		{
+			Sleep(500);
+			continue;;
+		}
+
+		//int bufSize = g_TextureWidth * g_TextureHeight * pixelSize;
+		const float t = g_Time * 4.0f;
+		g_Time += 0.03f;
+
+		// TODO: Setup Mutex/Lock for isARGBFrameReady/argbDataBuf
+		// Quick solution to coordinate render status
+		isARGBFrameReady = false;
+
+		byte* dst = argbDataBuf;
+		for (int y = 0; y < g_TextureHeight; ++y)
+		{
+			byte* ptr = dst;
+			for (int x = 0; x < g_TextureWidth; ++x)
+			{
+				// Simple "plasma effect": several combined sine waves
+				int vv = int(
+					(127.0f + (127.0f * sinf(x / 7.0f + t))) +
+					(127.0f + (127.0f * sinf(y / 5.0f - t))) +
+					(127.0f + (127.0f * sinf((x + y) / 6.0f - t))) +
+					(127.0f + (127.0f * sinf(sqrtf(float(x*x + y*y)) / 4.0f - t)))
+					) / 4;
+
+				ptr[0] = vv / 2;
+				ptr[1] = vv;
+				ptr[2] = vv;
+				ptr[3] = 255;
+
+				// To next pixel (our pixels are 4 bpp)
+				ptr += 4;
+			}
+
+			// To next image row
+			dst += pixelSize * g_TextureWidth;
+		}
+
+		isARGBFrameReady = true;
+		Sleep(15);
+	}
+
+	// Texture Update is executed when Unity triggers the render event to avoid collision
+	// between the plugin and Unity's graphics update.  Data can be manipulated but graphics
+	// needs to follow Unity render event.	
+	//
+	//UpdateUnityTexture(g_TextureHandle, g_TextureWidth * pixelSize, argbDataBuf);
+}
+
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPluginMode(int mode)
 {
 	PluginMode = mode;
+
+	if(PluginMode == 2)
+	{		
+		// Starts the display update thread and detach to run continuously
+		std::thread t(ProcessTestFrameDataThread);
+		t.detach();
+	}
 }
 
 
@@ -299,16 +362,27 @@ static void ProcessTestFrameData()
 	UpdateUnityTexture(g_TextureHandle, g_TextureWidth * pixelSize, argbDataBuf);
 }
 
+
+
+
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
 {
 	switch (PluginMode)
 	{
-	case 0:
+	case 0:		// WebRTC Image Frame Rendering
 		ProcessARGBFrameData();
 		break;
-	case 1:
+	case 1:		// Invoke
 		ProcessTestFrameData();
 		break;
+	case 2:		// Invoke
+		if(isARGBFrameReady)
+		{
+			UpdateUnityTexture(g_TextureHandle, g_TextureWidth * pixelSize, argbDataBuf);
+			isARGBFrameReady = false;
+		}
+		break;
+
 	}
 
 }

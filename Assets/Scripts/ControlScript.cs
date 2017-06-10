@@ -103,9 +103,9 @@ public class ControlScript : MonoBehaviour
         _webRtcControl.Initialize();
 
 
-        // Setup Low-Level Graphics Plugin
+        // Setup Low-Level Graphics Plugin        
+        CreateTextureAndPassToPlugin();
         SetPluginMode(PluginMode);
-        CreateTextureAndPassToPlugin();        
         StartCoroutine(CallPluginAtEndOfFrames());
 #endif
     }
@@ -414,9 +414,9 @@ public class ControlScript : MonoBehaviour
                         frame_ready_receive = true;
                     }
                     break;
-                case 1:
+                default:
                     GL.IssuePluginEvent(GetRenderEventFunc(), 1);
-                    break;
+                    break;                
             }          
 #endif
         }

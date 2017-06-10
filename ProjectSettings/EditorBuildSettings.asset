@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/RenderTextureHL.unity
     guid: 8dfb59eeb05b4c542bbbb7a08661c45e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/HLPluginPerfTest.unity
     guid: ed330a8a6e30d4d4294990c854f33643
+  - enabled: 1
+    path: Assets/Scenes/HLPluginPerfTestThread.unity
+    guid: 377e5300db99a744fbcf91e292de2dda
