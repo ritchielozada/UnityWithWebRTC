@@ -9,11 +9,12 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="TexturesUWP.cpp" />
-    <ClCompile Include="VideoDecoder.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="VideoDecoder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TexturesUWP.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UnityPluginAPI\IUnityEventQueue.h" />
     <ClInclude Include="UnityPluginAPI\IUnityGraphics.h" />
@@ -33,6 +34,7 @@
     <ClInclude Include="libyuv\convert_from.h" />
     <ClInclude Include="libyuv\convert_from_argb.h" />
     <ClInclude Include="libyuv\cpu_id.h" />
+    <ClInclude Include="libyuv\libyuv.h" />
     <ClInclude Include="libyuv\mjpeg_decoder.h" />
     <ClInclude Include="libyuv\planar_functions.h" />
     <ClInclude Include="libyuv\rotate.h" />
@@ -44,8 +46,12 @@
     <ClInclude Include="libyuv\scale_row.h" />
     <ClInclude Include="libyuv\version.h" />
     <ClInclude Include="libyuv\video_common.h" />
-    <ClInclude Include="libyuv\libyuv.h" />
-    <ClInclude Include="pch.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libyuv\libs\Debug\libyuv_win10_x64.lib" />
+    <Library Include="libyuv\libs\Debug\libyuv_win10_x86.lib" />
+    <Library Include="libyuv\libs\Release\libyuv_win10_x64.lib" />
+    <Library Include="libyuv\libs\Release\libyuv_win10_x86.lib" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TexturesUWP.def" />

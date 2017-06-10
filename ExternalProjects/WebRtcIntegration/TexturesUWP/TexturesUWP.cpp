@@ -19,6 +19,9 @@
 #include "libyuv/convert_argb.h"
 
 
+// Plugin Mode
+int PluginMode = 0;
+
 // Decoder Namespace
 using namespace WebRTCDirectXClientComponent;
 int const textureWidth = 1280;
@@ -95,10 +98,10 @@ extern "C" void	UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginLoad(IUnit
 	s_UnityInterfaces = unityInterfaces;
 	s_Graphics = s_UnityInterfaces->Get<IUnityGraphics>();
 	s_Graphics->RegisterDeviceEventCallback(OnGraphicsDeviceEvent);
-	
+
 	// Run OnGraphicsDeviceEvent(initialize) manually on plugin load
-	OnGraphicsDeviceEvent(kUnityGfxDeviceEventInitialize);	
-	InitializeVideoProcessing();	
+	OnGraphicsDeviceEvent(kUnityGfxDeviceEventInitialize);
+	InitializeVideoProcessing();
 }
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API UnityPluginUnload()
@@ -122,7 +125,7 @@ static void UNITY_INTERFACE_API OnGraphicsDeviceEvent(UnityGfxDeviceEventType ev
 	case kUnityGfxDeviceEventShutdown:
 	{
 		//TODO: user shutdown code
-		s_DeviceType = kUnityGfxRendererNull;		
+		s_DeviceType = kUnityGfxRendererNull;
 		break;
 	}
 	case kUnityGfxDeviceEventBeforeReset:
@@ -146,6 +149,11 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetTextureFromUnity(v
 	g_TextureHeight = h;
 }
 
+extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetPluginMode(int mode)
+{
+	PluginMode = mode;
+}
+
 
 void UpdateUnityTexture(void* textureHandle, int rowPitch, void* dataPtr)
 {
@@ -161,7 +169,7 @@ void UpdateUnityTexture(void* textureHandle, int rowPitch, void* dataPtr)
 
 
 extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API ProcessRawFrame(unsigned int w, unsigned int h, byte* yPlane, unsigned int yStride, byte* uPlane, unsigned int uStride, byte* vPlane, unsigned int vStride)
-{	
+{
 	if ((yPlane == NULL) || (vPlane == NULL) || (uPlane == NULL))
 		return;
 
@@ -203,11 +211,11 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API ProcessH264Frame(unsi
 		hH264Frame,
 		&yuvDataBuf,
 		&yuvDataBufLen))
-	{				
-		
+	{
+
 		int half_width = (wH264Frame + 1) / 2;
 		int half_height = (hH264Frame + 1) / 2;
-	
+
 		yStrideBuf = wH264Frame;
 		uStrideBuf = half_width;
 		vStrideBuf = half_width;
@@ -215,7 +223,7 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API ProcessH264Frame(unsi
 		// Note: Decode Information is in YVU ordering instead YUV
 		yDataBuf = yuvDataBuf;
 		vDataBuf = yuvDataBuf + yStrideBuf * hH264Frame;
-		uDataBuf = vDataBuf + vStrideBuf * half_height;		
+		uDataBuf = vDataBuf + vStrideBuf * half_height;
 
 		isARGBFrameReady = !libyuv::I420ToARGB(
 			yDataBuf,
@@ -237,7 +245,7 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API ProcessH264Frame(unsi
 //			wH264Frame * pixelSize,
 //			wH264Frame,
 //			hH264Frame);
-	}	
+	}
 }
 
 static void ProcessARGBFrameData()
@@ -252,9 +260,57 @@ static void ProcessARGBFrameData()
 	isARGBFrameReady = false;
 }
 
+static void ProcessTestFrameData()
+{
+	if (!g_TextureHandle)
+		return;
+
+	//int bufSize = g_TextureWidth * g_TextureHeight * pixelSize;
+	const float t = g_Time * 4.0f;
+	g_Time += 0.03f;
+
+	byte* dst = argbDataBuf;
+	for (int y = 0; y < g_TextureHeight; ++y)
+	{
+		byte* ptr = dst;
+		for (int x = 0; x < g_TextureWidth; ++x)
+		{
+			// Simple "plasma effect": several combined sine waves
+			int vv = int(
+				(127.0f + (127.0f * sinf(x / 7.0f + t))) +
+				(127.0f + (127.0f * sinf(y / 5.0f - t))) +
+				(127.0f + (127.0f * sinf((x + y) / 6.0f - t))) +
+				(127.0f + (127.0f * sinf(sqrtf(float(x*x + y*y)) / 4.0f - t)))
+				) / 4;
+
+			ptr[0] = vv / 2;
+			ptr[1] = vv;
+			ptr[2] = vv;
+			ptr[3] = 255;
+
+			// To next pixel (our pixels are 4 bpp)
+			ptr += 4;
+		}
+
+		// To next image row
+		dst += pixelSize * g_TextureWidth;
+	}
+
+	UpdateUnityTexture(g_TextureHandle, g_TextureWidth * pixelSize, argbDataBuf);
+}
+
 static void UNITY_INTERFACE_API OnRenderEvent(int eventID)
-{		
-	ProcessARGBFrameData();
+{
+	switch (PluginMode)
+	{
+	case 0:
+		ProcessARGBFrameData();
+		break;
+	case 1:
+		ProcessTestFrameData();
+		break;
+	}
+
 }
 
 extern "C" UnityRenderingEvent UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API GetRenderEventFunc()

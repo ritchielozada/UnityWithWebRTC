@@ -136,8 +136,8 @@
     <PostBuildEvent>xcopy /F /R /I /Y $(TargetDir)$(TargetName)$(TargetExt) $(SolutionDir)..\..\Assets\Plugins\WebRtcWrapper\
 xcopy /F /R /I /Y $(TargetDir)$(TargetName).pdb $(SolutionDir)..\..\Assets\Plugins\WebRtcWrapper\
 
-xcopy /F /R /I /Y $(TargetDir)$(TargetName)$(TargetExt) $(SolutionDir)..\..\Build\UWP\UnityX86\Unprocessed\
-xcopy /F /R /I /Y $(TargetDir)$(TargetName).pdb $(SolutionDir)..\..\Build\UWP\UnityX86\Unprocessed\</PostBuildEvent>
+xcopy /F /R /I /Y $(TargetDir)$(TargetName)$(TargetExt) $(SolutionDir)..\..\Build\UWP\UnityWithWebRTC\Unprocessed\
+xcopy /F /R /I /Y $(TargetDir)$(TargetName).pdb $(SolutionDir)..\..\Build\UWP\UnityWithWebRTC\Unprocessed\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

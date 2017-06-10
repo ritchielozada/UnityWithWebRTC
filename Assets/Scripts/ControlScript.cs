@@ -35,7 +35,8 @@ public class ControlScript : MonoBehaviour
     public InputField MessageInputField;
     public Renderer RenderTexture;
     public Transform VirtualCamera;
-    public float TextureScale = 0.4f;
+    public float TextureScale = 1f;
+    public int PluginMode = 0;
 
     private Transform camTransform;
     private Vector3 prevPos;
@@ -73,10 +74,12 @@ public class ControlScript : MonoBehaviour
     private static extern void ProcessH264Frame(uint w, uint h, IntPtr data, uint dataSize);
 
     [DllImport("TexturesUWP")]
-
     private static extern IntPtr GetRenderEventFunc();
+
+    [DllImport("TexturesUWP")]
+    private static extern void SetPluginMode(int mode);
 #endif
-#endregion
+    #endregion
 
     void Awake()
     {       
@@ -98,11 +101,13 @@ public class ControlScript : MonoBehaviour
 
         Conductor.Instance.OnAddRemoteStream += Conductor_OnAddRemoteStream;
         _webRtcControl.Initialize();
-#endif
+
 
         // Setup Low-Level Graphics Plugin
-        CreateTextureAndPassToPlugin();
+        SetPluginMode(PluginMode);
+        CreateTextureAndPassToPlugin();        
         StartCoroutine(CallPluginAtEndOfFrames());
+#endif
     }
 
 #if !UNITY_EDITOR
@@ -182,7 +187,7 @@ public class ControlScript : MonoBehaviour
         vP.Free();        
     }
 #endif
-    
+
     private void WebRtcControlOnInitialized()
     {
         EnqueueAction(OnInitialized);
@@ -399,11 +404,20 @@ public class ControlScript : MonoBehaviour
             // For our simple plugin, it does not matter which ID we pass here.
 
 #if !UNITY_EDITOR
-            if (!frame_ready_receive)
+
+            switch (PluginMode)
             {
-                GL.IssuePluginEvent(GetRenderEventFunc(), 1);              
-                frame_ready_receive = true;               
-            }
+                case 0:
+                    if (!frame_ready_receive)
+                    {
+                        GL.IssuePluginEvent(GetRenderEventFunc(), 1);
+                        frame_ready_receive = true;
+                    }
+                    break;
+                case 1:
+                    GL.IssuePluginEvent(GetRenderEventFunc(), 1);
+                    break;
+            }          
 #endif
         }
     }
