@@ -90,8 +90,7 @@ public class ControlScript : MonoBehaviour
         prevPos = camTransform.position;
         prevRot = camTransform.rotation;
 
-#if !UNITY_EDITOR
-        //_webRtcUtils = new WebRtcUtils();
+#if !UNITY_EDITOR        
         _webRtcControl = new WebRtcControl();
         _webRtcControl.OnInitialized += WebRtcControlOnInitialized;
         _webRtcControl.OnPeerMessageDataReceived += WebRtcControlOnPeerMessageDataReceived;
