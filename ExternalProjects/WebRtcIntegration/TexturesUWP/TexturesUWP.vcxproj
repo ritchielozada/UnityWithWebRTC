@@ -133,7 +133,7 @@
       <ModuleDefinitionFile>TexturesUWP.def</ModuleDefinitionFile>
       <AdditionalLibraryDirectories>$(ProjectDir)libyuv\libs\Debug</AdditionalLibraryDirectories>
       <AdditionalDependencies>libyuv_win10_x86.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib</AdditionalOptions>
+      <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /F /R /I /Y $(TargetPath) $(SolutionDir)..\..\Assets\Plugins\WSA\
@@ -195,6 +195,9 @@ xcopy /F /R /I /Y $(TargetPath) $(SolutionDir)..\..\Build\UWP\UnityWithWebRTC\Pl
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>TexturesUWP.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libyuv_win10_x64.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libyuv\libs\Release</AdditionalLibraryDirectories>
+      <AdditionalOptions>/nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -207,6 +210,9 @@ xcopy /F /R /I /Y $(TargetPath) $(SolutionDir)..\..\Build\UWP\UnityWithWebRTC\Pl
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
       <ModuleDefinitionFile>TexturesUWP.def</ModuleDefinitionFile>
+      <AdditionalDependencies>libyuv_win10_x64.lib;WindowsApp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libyuv\libs\Release</AdditionalLibraryDirectories>
+      <AdditionalOptions>/nodefaultlib:vccorlib /nodefaultlib:msvcrt vccorlib.lib msvcrt.lib</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
