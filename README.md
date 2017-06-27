@@ -2,6 +2,7 @@
 Unity using WebRTC UWP Libraries
 
 This is a Unity Project with integration Plugins to utilize the UWP WebRTC Library from Nuget.Org.
+Uses https://github.com/webrtc-uwp/PeerCC as reference for the integration project.
 
 # Setup
 
