@@ -61,4 +61,4 @@ Plugin Source Code located in \\ExternalProjects.
 
 ## Notes
 
-A brief description of the InterOp in the project is at [Microsoft Real Life Code: Revisiting InterOp with Unity, UWP and DirectX](https://www.microsoft.com/developerblog/2017/06/28/revisiting-interop-unity-uwp-directx/)
+A brief description of the InterOp in the project is at [Microsoft Code Stories: Revisiting InterOp with Unity, UWP and DirectX](https://www.microsoft.com/developerblog/2017/06/28/revisiting-interop-unity-uwp-directx/)
