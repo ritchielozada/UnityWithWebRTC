@@ -29,10 +29,10 @@ Plugin Source Code located in \\ExternalProjects.
   * Open the Visual Studio Solution: \\ExternalProjects\\WebRtcIntegration\\WebRtcIntegration.sln
   * Right-Click "XamlTestApp" in the Visual Studio Solution
   * Click Build and then Deploy to install the XamlTestApp on the workstation   
-1. Build the Plugin DLL (Unity3D Development Workstation)
+2. Build the Plugin DLL (Unity3D Development Workstation)
   * Open the Visual Studio Solution: \\ExternalProjects\\WebRtcIntegration\\WebRtcIntegration.sln
   * Build and Deploy the "WebRtcWrapper" Project, the DLL's are automatically copied to the Unity Asset Folder
-1. Build the Unity Project (Unity3D Development Workstation)
+3. Build the Unity Project (Unity3D Development Workstation)
   * Start Unity3D, select the clone root folder
   * Load the Scene "RenderTexture" located in \\Scenes\\RenderTexture
   * Open the Build Settings Window (Ctrl-Shift-B or File->Build Settings)
