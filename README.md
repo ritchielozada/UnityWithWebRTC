@@ -28,7 +28,7 @@ Plugin Source Code located in \\ExternalProjects.
 1. Build the XAML Test App (Visual Studio Workstation)
   * Open the Visual Studio Solution: \\ExternalProjects\\WebRtcIntegration\\WebRtcIntegration.sln
   * Right-Click "XamlTestApp" in the Visual Studio Solution
-  * Click Build and then Deploy to install the XamlTestApp on the workstation   
+  * Click Build and then Deploy to install the XamlTestApp on the workstation
 2. Build the Plugin DLL (Unity3D Development Workstation)
   * Open the Visual Studio Solution: \\ExternalProjects\\WebRtcIntegration\\WebRtcIntegration.sln
   * Build and Deploy the "WebRtcWrapper" Project, the DLL's are automatically copied to the Unity Asset Folder
@@ -61,4 +61,4 @@ Plugin Source Code located in \\ExternalProjects.
 
 ## Notes
 
-A brief description of the InterOp in the project is at [Microsoft Real Life Code: Revisiting InterOp with Unity, UWP and DirectX]( https://www.microsoft.com/reallifecode/2017/06/28/revisiting-interop-unity-uwp-directx/)
+A brief description of the InterOp in the project is at [Microsoft Real Life Code: Revisiting InterOp with Unity, UWP and DirectX](https://www.microsoft.com/developerblog/2017/06/28/revisiting-interop-unity-uwp-directx/)
