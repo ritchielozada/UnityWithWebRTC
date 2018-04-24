@@ -55,9 +55,14 @@ Plugin Source Code located in \\ExternalProjects.
 
 ## Known Issues
 
-* Unity Peer Application only receives video/audio feed from transmitting peer.  Webcam/Mic is activated as required by UWP WebRTC Lib
+* Unity Peer Application only receives video/audio feed from transmitting peer.  Webcam/Mic device is required by UWP WebRTC Lib but not used/disabled on Unity App
 * The plugin can be optimized further by using shaders to handle the color conversion
+* Disconnecting and Reconnecting a session may not work, session objects need to clean-up
 
+## Next Steps
+
+* The setup is dependent on the UWP WebRTC package from nuget.org, next major iteration is to transition to webrtc.org native libraries to support cross-platform build
+* Plan to support Android, iOS and Windows (Standalone) with Unity
 
 ## Notes
 
